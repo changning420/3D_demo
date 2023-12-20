@@ -1,0 +1,11 @@
+# OBJ Material Export by Luxion KeyShot
+
+newmtl black
+Kd 0.0117647 0.0117647 0.0117647
+Ks 0.00242008 0.00242008 0.00242008
+
+newmtl orange
+Kd 0.5 0.5 0.5
+
+newmtl white
+Kd 0.5 0.5 0.5

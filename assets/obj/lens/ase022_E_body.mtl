@@ -1,0 +1,58 @@
+# OBJ Material Export by Luxion KeyShot
+
+newmtl white12
+Kd 0.5 0.5 0.5
+
+newmtl button_black
+Kd 0 0 0
+Ks 0.0470207 0.0470207 0.0470207
+
+newmtl hood2
+Kd 0 0 0
+Ks 0.0470207 0.0470207 0.0470207
+
+newmtl fine_frosted_black5
+Kd 0.0117647 0.0117647 0.0117647
+Ks 0.000499733 0.000499733 0.000499733
+
+newmtl fine_frosted_black2
+Kd 0.0117647 0.0117647 0.0117647
+Ks 0.000499733 0.000499733 0.000499733
+
+newmtl fine_frosted_black3
+Kd 0.0117647 0.0117647 0.0117647
+Ks 0.000499733 0.000499733 0.000499733
+
+newmtl black_border5
+Kd 0 0 0
+Ks 0 0 0
+
+newmtl black_border8
+Kd 0 0 0
+Ks 0.250004 0.250004 0.250004
+
+newmtl fine_frosted_black1
+Kd 0.0117647 0.0117647 0.0117647
+Ks 0.000499733 0.000499733 0.000499733
+
+newmtl df_red1
+Kd 0.799451 0.0797284 0.0888228
+Ks 0.399725 0.0398642 0.0444114
+
+newmtl silver_ring_noise1
+Kd 0 0 0
+Ks 0.764721 0.764721 0.764721
+
+newmtl waterproof_ring_red
+Kd 0.138786 0.0277318 0.0254174
+
+newmtl silver_screw
+Kd 0.827451 0.843137 0.866667
+Ks 0.5 0.5 0.5
+
+newmtl df_silver_brushed5
+Kd 0.5 0.5 0.5
+
+newmtl df_red10
+Kd 0.799451 0.0797284 0.0888228
+Ks 0.399725 0.0398642 0.0444114

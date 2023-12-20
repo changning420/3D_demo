@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Flutter WebView</title>
+    <script>
+
+
+        // 发送数据给Flutter
+        function sendDataToFlutter() {
+            var data = 'Hello from H5!';
+            // var data2 = '{"key":"goBack","data":"123"}';
+            // var data1 = { key: 'goBack', data: 123 };
+            window.flutter_inappwebview.callHandler('xxoo', data)
+            window.parent.postMessage(data)
+            // var url = "jsbridge:" + data;
+            // window.location.href = url;
+            console.log('sendDataToFlutter:', data);
+        }
+
+        // 发送数据给Flutter
+        function reverseMessage(isSuccess) {
+            console.log('Received data from Flutter111:', isSuccess);
+            return '123'
+        }
+
+        // 接收Flutter返回的数据
+        window.addEventListener('message', function (event) {
+            var receivedData = event.data;
+            // 处理接收到的数据
+            console.log('Received data from Flutter222:', receivedData);
+        });
+    </script>
+</head>
+
+<body>
+    <button onclick="sendDataToFlutter()" style="width: 200px; height: 200px;">Send Data to Flutter</button>
+
+</body>
+
+</html>

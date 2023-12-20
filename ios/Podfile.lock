@@ -1,0 +1,43 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_gl (0.0.3):
+    - Flutter
+    - three3d_egl (~> 0.1.3)
+  - flutter_inappwebview (0.0.1):
+    - Flutter
+    - flutter_inappwebview/Core (= 0.0.1)
+    - OrderedSet (~> 5.0)
+  - flutter_inappwebview/Core (0.0.1):
+    - Flutter
+    - OrderedSet (~> 5.0)
+  - OrderedSet (5.0.0)
+  - three3d_egl (0.1.3)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_gl (from `.symlinks/plugins/flutter_gl/ios`)
+  - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
+
+SPEC REPOS:
+  trunk:
+    - OrderedSet
+    - three3d_egl
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_gl:
+    :path: ".symlinks/plugins/flutter_gl/ios"
+  flutter_inappwebview:
+    :path: ".symlinks/plugins/flutter_inappwebview/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_gl: 5a5603f35db897697f064027864a32b15d0c421d
+  flutter_inappwebview: 3d32228f1304635e7c028b0d4252937730bbc6cf
+  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
+  three3d_egl: de2cd4950ad2d5f2122166c36583bde4c812e7b5
+
+PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+
+COCOAPODS: 1.14.3
