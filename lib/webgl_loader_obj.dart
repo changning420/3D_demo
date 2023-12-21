@@ -30,9 +30,12 @@ class _MyAppState extends State<WebGlLoaderObj> {
   late three.Camera camera1;
   late three.Camera camera2;
   late three.Mesh mesh;
+  Map<String, three.Mesh> meshMap = {};
 
   three.Vector2 clickedPoint = three.Vector2(double.infinity, double.infinity);
   three.Raycaster raycaster = three.Raycaster();
+  bool isAF = true;
+  bool isUnLock = true;
 
   double dpr = 1.0;
 
@@ -94,32 +97,40 @@ class _MyAppState extends State<WebGlLoaderObj> {
   void onMouseDown(event) {
     print(" onMouseDown .............${event.clientX}");
     didClick = true;
+    mousePosition.x = event.clientX;
+    mousePosition.y = event.clientY;
+    render();
   }
 
   void onMouseUp(event) {
     print(" onMouseUp .............${event.clientX}");
     didClick = false;
+    mousePosition.x = event.clientX;
+    mousePosition.y = event.clientY;
+    // render();
   }
 
+  double rotate = 0.1;
   void onMouseMove(event) {
     // pointer.x = (event.clientX / width) * 2 - 1;
     // pointer.y = -(event.clientY / height) * 2 + 1;
 
     if (didClick && intersected != null) {
-      double rotate = 0.05;
+      rotate = 0.1;
       if (movePosition > event.clientX) {
-        rotate = -0.05;
+        rotate = -0.1;
       }
 
-      setState(() {
-        intersected!.rotation.y += rotate;
-      });
+      // setState(() {
+      //   intersected!.rotation.y += rotate;
+      // });
     } else {
       print(event);
       mousePosition.x = event.clientX;
       mousePosition.y = event.clientY;
     }
     movePosition = event.clientX;
+    render();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -221,7 +232,8 @@ class _MyAppState extends State<WebGlLoaderObj> {
 
     final gl = three3dRender.gl;
 
-    // checkIntersection();
+    checkIntersection();
+
     renderer!.render(scene, camera);
 
     int t1 = DateTime.now().millisecondsSinceEpoch;
@@ -265,7 +277,11 @@ class _MyAppState extends State<WebGlLoaderObj> {
     }
   }
 
-  initScene() {
+  void initScene() {
+    domElement.addEventListener('pointerdown', onMouseDown, false);
+    domElement.addEventListener('pointermove', onMouseMove, false);
+    domElement.addEventListener('mousemove', onMouseMove, false);
+    domElement.addEventListener('pointerup', onMouseUp, false);
     initRenderer();
     initPage();
   }
@@ -386,8 +402,10 @@ class _MyAppState extends State<WebGlLoaderObj> {
     regulatingRingObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_2');
     regulatingRingObject.scale.set(0.5, 0.5, 0.5);
-    regulatingRingObject.position.set(-0.15, 7.9, 0);
+    regulatingRingObject.position.set(0, 7.5, 0); //-0.25
     scene.add(regulatingRingObject);
+    meshMap
+        .addAll({'Distance': regulatingRingObject.children.last as three.Mesh});
 
     // var position =
     //     regulatingRingObject.getWorldPosition(regulatingRingObject.position);
@@ -401,36 +419,44 @@ class _MyAppState extends State<WebGlLoaderObj> {
     scene.add(apertureRingObject);
     apertureRingObject.scale.set(0.5, 0.5, 0.5);
     apertureRingObject.position.set(21.58, 6.31, 0);
+    meshMap
+        .addAll({'Aperture': apertureRingObject.children.first as three.Mesh});
 
     ///Fn1
     fn1ButtonObject =
-        await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_1');
+        await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_2');
     scene.add(fn1ButtonObject);
     fn1ButtonObject.scale.set(0.5, 0.5, 0.5);
+    meshMap.addAll({'FN1': fn1ButtonObject.children.last as three.Mesh});
 
     ///Fn2
     fn2ButtonObject =
-        await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_2');
+        await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_1');
     scene.add(fn2ButtonObject);
     fn2ButtonObject.scale.set(0.5, 0.5, 0.5);
+    meshMap.addAll({'FN2': fn2ButtonObject.children.last as three.Mesh});
 
     ///AF/MF
     aFOrMfButtonObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_3');
     scene.add(aFOrMfButtonObject);
     aFOrMfButtonObject.scale.set(0.5, 0.5, 0.5);
-    aFOrMfButtonObject.traverse((child) {
-      if (child is three.Mesh) {
-        print(child);
-        mesh = child;
-      }
-    });
+    meshMap.addAll({'AF': aFOrMfButtonObject.children.last as three.Mesh});
+
+    // meshList.add(three.Mesh(three.BoxGeometry(5, 5, 5),
+    //     three.MeshLambertMaterial({"color": 0xff00ff}))
+    //   ..translateZ(20)
+    //   ..translateY(-0.5));
+    // scene.add(meshList[1]);
 
     ///lock
     lockButtonObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_4');
     scene.add(lockButtonObject);
     lockButtonObject.scale.set(0.5, 0.5, 0.5);
+    lockButtonObject.translateY(-0.52);
+    lockButtonObject.rotateY(three.Math.pi * 0.02);
+    meshMap.addAll({'Lock': lockButtonObject.children.last as three.Mesh});
 
     // apertureRingControls = three_jsm.ArcballControls(camera, _globalKey);
     // apertureRingControls.addEventListener('wheel', () {
@@ -460,9 +486,14 @@ class _MyAppState extends State<WebGlLoaderObj> {
   }
 
   void rotateLeft() {
-    // bodyRotationY = three.Math.pi * 0.5;
-    // bodyObject.rotateY(bodyRotationY);
-
+    bodyRotationY = three.Math.pi * 0.5;
+    bodyObject.rotateY(bodyRotationY);
+    regulatingRingObject.rotateY(bodyRotationY);
+    apertureRingObject.rotateY(bodyRotationY);
+    fn1ButtonObject.rotateY(bodyRotationY);
+    fn2ButtonObject.rotateY(bodyRotationY);
+    aFOrMfButtonObject.rotateY(bodyRotationY);
+    lockButtonObject.rotateY(bodyRotationY);
     render();
   }
 
@@ -473,9 +504,9 @@ class _MyAppState extends State<WebGlLoaderObj> {
 
     render();
 
-    Future.delayed(Duration(milliseconds: 40), () {
-      animate();
-    });
+    // Future.delayed(Duration(milliseconds: 40), () {
+    //   animate();
+    // });
   }
 
   void checkIntersection() {
@@ -489,13 +520,29 @@ class _MyAppState extends State<WebGlLoaderObj> {
     //one
     raycaster.setFromCamera(convertPosition(mousePosition), camera);
     List<three.Intersection> intersects =
-        raycaster.intersectObject(regulatingRingObject, false);
+        raycaster.intersectObject(meshMap['AF'] as three.Mesh, false);
     _raycasterListen(intersects);
 
     //two
     List<three.Intersection> intersects1 =
-        raycaster.intersectObject(apertureRingObject, false);
+        raycaster.intersectObject(meshMap['Lock'] as three.Mesh, false);
     _raycasterListen(intersects1);
+    //3
+    List<three.Intersection> intersects2 =
+        raycaster.intersectObject(meshMap['FN1'] as three.Mesh, false);
+    _raycasterListen(intersects2);
+    //4
+    List<three.Intersection> intersects3 =
+        raycaster.intersectObject(meshMap['FN2'] as three.Mesh, false);
+    _raycasterListen(intersects3);
+    //5
+    List<three.Intersection> intersects4 =
+        raycaster.intersectObject(meshMap['Distance'] as three.Mesh, false);
+    _raycasterListen(intersects4);
+    //6
+    List<three.Intersection> intersects5 =
+        raycaster.intersectObject(meshMap['Aperture'] as three.Mesh, false);
+    _raycasterListen(intersects5);
   }
 
   void _raycasterListen(List<three.Intersection> intersects, {int index = 0}) {
@@ -522,12 +569,56 @@ class _MyAppState extends State<WebGlLoaderObj> {
     if (intersects.isNotEmpty) {
       print("intersects: ${intersects.length} ");
       if (intersected != intersects.first.object) {
-        print("intersects=====");
+        print(
+            "intersects=====${intersects.first.object.id}:${aFOrMfButtonObject.children.last.id}");
+        if (intersects.first.object.id == aFOrMfButtonObject.children.last.id) {
+          print('点击了AF和MF按钮');
+          isAF = !isAF;
+          aFOrMfButtonObject.translateY(isAF ? 1 : -1);
+        }
+        if (intersects.first.object.id == lockButtonObject.children.last.id) {
+          print('点击了lock按钮');
+          isUnLock = !isUnLock;
+          lockButtonObject.translateY(isUnLock ? 1.1 : -1.1);
+        }
+        if (intersects.first.object.id == fn1ButtonObject.children.last.id) {
+          print('点击了fn1按钮');
+
+          fn1ButtonObject.translateZ(0.05);
+          Future.delayed(const Duration(milliseconds: 200), () {
+            fn1ButtonObject.translateZ(-0.05);
+          });
+        }
+        if (intersects.first.object.id == fn2ButtonObject.children.last.id) {
+          print('点击了fn2按钮');
+          fn2ButtonObject.translateZ(0.05);
+          Future.delayed(const Duration(milliseconds: 200), () {
+            fn2ButtonObject.translateZ(-0.05);
+          });
+        }
+        if (intersects.first.object.id ==
+            regulatingRingObject.children.last.id) {
+          print('滚动物距');
+          // fn2ButtonObject.translateZ(0.05);
+          // Future.delayed(const Duration(milliseconds: 200), () {
+          //   fn2ButtonObject.translateZ(-0.05);
+          // });
+          regulatingRingObject.rotateY(rotate);
+        }
+        if (intersects.first.object.id ==
+            apertureRingObject.children.first.id) {
+          print('滚动光圈');
+          // fn2ButtonObject.translateZ(0.05);
+          // Future.delayed(const Duration(milliseconds: 200), () {
+          //   fn2ButtonObject.translateZ(-0.05);
+          // });
+          apertureRingObject.rotateY(rotate);
+        }
         if (intersected != null) {
-          materialEmmisivity(0);
+          // materialEmmisivity(0);
         }
         intersected = intersects.first.object;
-        materialEmmisivity(0.55);
+        // materialEmmisivity(0.55);
       }
     } else if (intersected != null) {
       materialEmmisivity(0);
