@@ -332,7 +332,7 @@ class _State extends State<WebglGeometries> {
 
     scene.traverse((object) {
       if (object is Mesh) {
-        object.rotation.x = timer * 5;
+        // object.rotation.x = timer * 5;
         object.rotation.y = timer * 2.5;
       }
     });

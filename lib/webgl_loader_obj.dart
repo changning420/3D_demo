@@ -119,6 +119,7 @@ class _MyAppState extends State<WebGlLoaderObj> {
       rotate = 0.1;
       if (movePosition > event.clientX) {
         rotate = -0.1;
+        print('-------------');
       }
 
       // setState(() {
@@ -286,10 +287,12 @@ class _MyAppState extends State<WebGlLoaderObj> {
     initPage();
   }
 
+  // double objSale = 0.0225;
+  double objSale = 0.5;
   initPage() async {
     three.Group();
     camera = three.PerspectiveCamera(45, width / height, 1, 2000);
-    camera.position.z = 200;
+    camera.position.z = 200; //200 , sale 0.5
 
     // scene
 
@@ -297,52 +300,8 @@ class _MyAppState extends State<WebGlLoaderObj> {
     scene.background = three.Color(0xff363636);
     scene.fog = three.FogExp2(0xffffffff, 0.002);
 
-    var ambientLight = three.AmbientLight(0xffffffff, 1);
-    scene.add(ambientLight);
-
-    var pointLight = three.PointLight(0xffffffff, 1, 1, 0);
-    pointLight.position.set(0, 10, 5);
-    scene.add(pointLight);
-
-    var dirLight1 = three.DirectionalLight(0xffffffff);
-    dirLight1.position.set(1, 1, 5);
-    scene.add(dirLight1);
-
-    var dirLight2 = three.DirectionalLight(0xffffffff);
-    dirLight2.position.set(-1, -1, -5);
-    scene.add(dirLight2);
-
-    var dirLight3 = three.DirectionalLight(0xffffffff);
-    dirLight3.position.set(0, 10, 5);
-    scene.add(dirLight3);
-
-    var pointLight1 = three.PointLight(0xffffffff, 1, 1, 0);
-    pointLight1.position.set(0, 10, 15);
-    camera.add(pointLight1);
-    scene.add(camera);
-
-    var pointLight2 = three.PointLight(0xffffffff, 1, 1, 0);
-    pointLight2.position.set(0, 20, 15);
-    camera.add(pointLight2);
-    scene.add(camera);
-
-    var pointLight3 = three.PointLight(0xffffffff, 1, 1, 0);
-    pointLight3.position.set(0, 30, 15);
-    camera.add(pointLight3);
-    scene.add(camera);
-
-    var pointLight4 = three.PointLight(0xffffffff, 1, 1, 0);
-    pointLight4.position.set(0, 40, 15);
-    camera.add(pointLight4);
-    scene.add(camera);
-
-    var hemiLight = three.HemisphereLight(0xffffff, 0x444444);
-    hemiLight.position.set(0, 20, 0);
-    scene.add(hemiLight);
-
-    var hemiLight1 = three.HemisphereLight(0xffffffff, 0xff444444);
-    hemiLight1.position.set(0, 0, 15);
-    scene.add(hemiLight1);
+    // _oldLight();
+    _newLight();
 
     // texture
 
@@ -395,18 +354,18 @@ class _MyAppState extends State<WebGlLoaderObj> {
     //   }
     // });
 
-    bodyObject.scale.set(0.5, 0.5, 0.5);
+    bodyObject.scale.set(objSale, objSale, objSale);
     bodyObject.rotateY(bodyRotationY);
 
     ///物距调节环
     regulatingRingObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_2');
-    regulatingRingObject.scale.set(0.5, 0.5, 0.5);
-    regulatingRingObject.position.set(0, 7.5, 0); //-0.25
+    regulatingRingObject.scale.set(objSale, objSale, objSale);
+    regulatingRingObject.position.set(-0.25, 7.5, 0); //-0.25
     scene.add(regulatingRingObject);
     meshMap
         .addAll({'Distance': regulatingRingObject.children.last as three.Mesh});
-
+    _focusCenter();
     // var position =
     //     regulatingRingObject.getWorldPosition(regulatingRingObject.position);
 
@@ -416,31 +375,39 @@ class _MyAppState extends State<WebGlLoaderObj> {
     ///光圈调节环
     apertureRingObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_3');
+
     scene.add(apertureRingObject);
-    apertureRingObject.scale.set(0.5, 0.5, 0.5);
-    apertureRingObject.position.set(21.58, 6.31, 0);
+    apertureRingObject.scale.set(objSale, objSale, objSale);
+    // apertureRingObject.position.set(21.58, 6.31, 0);
+    // apertureRingObject.position.set(20, 6.31, 0);
     meshMap
         .addAll({'Aperture': apertureRingObject.children.first as three.Mesh});
+    _apertureCenter();
+    // var translationMatrix = three.Matrix4().makeTranslation(
+    //     42,
+    //     0, //-40,
+    //     0);
+    // apertureRingObject.applyMatrix4(translationMatrix);
 
     ///Fn1
     fn1ButtonObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_2');
     scene.add(fn1ButtonObject);
-    fn1ButtonObject.scale.set(0.5, 0.5, 0.5);
+    fn1ButtonObject.scale.set(objSale, objSale, objSale);
     meshMap.addAll({'FN1': fn1ButtonObject.children.last as three.Mesh});
 
     ///Fn2
     fn2ButtonObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_1');
     scene.add(fn2ButtonObject);
-    fn2ButtonObject.scale.set(0.5, 0.5, 0.5);
+    fn2ButtonObject.scale.set(objSale, objSale, objSale);
     meshMap.addAll({'FN2': fn2ButtonObject.children.last as three.Mesh});
 
     ///AF/MF
     aFOrMfButtonObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_3');
     scene.add(aFOrMfButtonObject);
-    aFOrMfButtonObject.scale.set(0.5, 0.5, 0.5);
+    aFOrMfButtonObject.scale.set(objSale, objSale, objSale);
     meshMap.addAll({'AF': aFOrMfButtonObject.children.last as three.Mesh});
 
     // meshList.add(three.Mesh(three.BoxGeometry(5, 5, 5),
@@ -453,7 +420,7 @@ class _MyAppState extends State<WebGlLoaderObj> {
     lockButtonObject =
         await _createObject3D(manager, mtlLoader, objName: 'ase022_E_key_4');
     scene.add(lockButtonObject);
-    lockButtonObject.scale.set(0.5, 0.5, 0.5);
+    lockButtonObject.scale.set(objSale, objSale, objSale);
     lockButtonObject.translateY(-0.52);
     lockButtonObject.rotateY(three.Math.pi * 0.02);
     meshMap.addAll({'Lock': lockButtonObject.children.last as three.Mesh});
@@ -469,6 +436,150 @@ class _MyAppState extends State<WebGlLoaderObj> {
     scene.background = backImage;
 
     animate();
+  }
+
+  void _newLight() {
+    // var ambientLight = three.AmbientLight(0xffffffff, 1);
+    // scene.add(ambientLight);
+
+    var pointLight = three.PointLight(0xffffffff, 1, 1, 0);
+    pointLight.position.set(0, 0, 210);
+    scene.add(pointLight);
+
+    var dirLight1 = three.DirectionalLight(0xffffffff);
+    dirLight1.position.set(0, 1, 210);
+    scene.add(dirLight1);
+
+    var dirLight2 = three.DirectionalLight(0xffffffff);
+    dirLight2.position.set(0, 0, 210);
+    scene.add(dirLight2);
+
+    var dirLight3 = three.DirectionalLight(0xffffffff);
+    dirLight3.position.set(5, 1, 210);
+    scene.add(dirLight3);
+
+    var dirLight4 = three.DirectionalLight(0xffffffff);
+    dirLight4.position.set(-5, 0, 210);
+    scene.add(dirLight4);
+
+    // var dirLight5 = three.DirectionalLight(0xffffffff);
+    // dirLight5.position.set(-5, 0, 200);
+    // scene.add(dirLight5);
+
+    var hemiLight = three.HemisphereLight(0xffffff, 0x444444);
+    hemiLight.position.set(2, 0, 210);
+    scene.add(hemiLight);
+
+    var hemiLight1 = three.HemisphereLight(0xffffffff, 0xff444444);
+    hemiLight1.position.set(-2, 0, 210);
+    scene.add(hemiLight1);
+  }
+
+  void _focusCenter() {
+    var foundFocusGeometry = false;
+    var focusCenter = three.Vector3();
+    regulatingRingObject.traverse((child) {
+      if (child is three.Mesh) {
+        three.Mesh ms = child;
+        if (ms.geometry != null && foundFocusGeometry == false) {
+          var geometry = child.geometry!;
+          geometry.computeBoundingBox();
+          geometry.boundingBox!.getCenter(focusCenter);
+          geometry.center();
+          foundFocusGeometry = true;
+        }
+      }
+    });
+    regulatingRingObject.position.set(0.05, 27.5, 0);
+  }
+
+  void _apertureCenter() {
+    var center = three.Vector3();
+    var foundGeometry = false;
+    apertureRingObject.traverse((child) {
+      if (child is three.Mesh) {
+        three.Mesh ms = child;
+        if (ms.geometry != null && foundGeometry == false) {
+          var geometry = child.geometry!;
+          geometry.computeBoundingBox();
+          geometry.boundingBox!.getCenter(center);
+          geometry.center();
+          foundGeometry = true;
+        }
+      }
+    });
+    // apertureRingObject.position.set(0.5, 2, 0.5);
+    apertureRingObject.children.first.position.set(0.5, 4, 0.5);
+    // apertureRingObject.children[apertureRingObject.children.length - 2].position
+    //     .set(21.58, 6.31, 0);
+  }
+
+  void rotateAboutPoint(
+      three.Object3D obj, three.Vector3 point, three.Vector3 axis, double theta,
+      [bool pointIsWorld = false]) {
+    if (pointIsWorld) {
+      obj.parent!.localToWorld(obj.position); // compensate for world coordinate
+    }
+
+    obj.position.sub(point); // remove the offset
+    obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
+    obj.position.add(point); // re-add the offset
+
+    if (pointIsWorld) {
+      obj.parent!
+          .worldToLocal(obj.position); // undo world coordinates compensation
+    }
+
+    obj.rotateOnAxis(axis, theta); // rotate the OBJECT
+  }
+
+  void _oldLight() {
+    var ambientLight = three.AmbientLight(0xffffffff, 1);
+    scene.add(ambientLight);
+
+    var pointLight = three.PointLight(0xffffffff, 1, 1, 0);
+    pointLight.position.set(0, 10, 5);
+    scene.add(pointLight);
+
+    var dirLight1 = three.DirectionalLight(0xffffffff);
+    dirLight1.position.set(1, 1, 5);
+    scene.add(dirLight1);
+
+    var dirLight2 = three.DirectionalLight(0xffffffff);
+    dirLight2.position.set(-1, -1, -5);
+    scene.add(dirLight2);
+
+    var dirLight3 = three.DirectionalLight(0xffffffff);
+    dirLight3.position.set(0, 10, 5);
+    scene.add(dirLight3);
+
+    var pointLight1 = three.PointLight(0xffffffff, 1, 1, 0);
+    pointLight1.position.set(0, 10, 15);
+    camera.add(pointLight1);
+    scene.add(camera);
+
+    var pointLight2 = three.PointLight(0xffffffff, 1, 1, 0);
+    pointLight2.position.set(0, 20, 15);
+    camera.add(pointLight2);
+    scene.add(camera);
+
+    var pointLight3 = three.PointLight(0xffffffff, 1, 1, 0);
+    pointLight3.position.set(0, 30, 15);
+    camera.add(pointLight3);
+    scene.add(camera);
+
+    var pointLight4 = three.PointLight(0xffffffff, 1, 1, 0);
+    pointLight4.position.set(0, 40, 15);
+    camera.add(pointLight4);
+    scene.add(camera);
+
+    var hemiLight = three.HemisphereLight(0xffffff, 0x444444);
+    hemiLight.position.set(0, 20, 0);
+    scene.add(hemiLight);
+
+    var hemiLight1 = three.HemisphereLight(0xffffffff, 0xff444444);
+    hemiLight1.position.set(0, 0, 15);
+    scene.add(hemiLight1);
   }
 
   Future<three.Object3D> _createObject3D(
@@ -489,7 +600,7 @@ class _MyAppState extends State<WebGlLoaderObj> {
     bodyRotationY = three.Math.pi * 0.5;
     bodyObject.rotateY(bodyRotationY);
     regulatingRingObject.rotateY(bodyRotationY);
-    apertureRingObject.rotateY(bodyRotationY);
+    // apertureRingObject.rotateY(bodyRotationY);
     fn1ButtonObject.rotateY(bodyRotationY);
     fn2ButtonObject.rotateY(bodyRotationY);
     aFOrMfButtonObject.rotateY(bodyRotationY);
@@ -604,6 +715,8 @@ class _MyAppState extends State<WebGlLoaderObj> {
           //   fn2ButtonObject.translateZ(-0.05);
           // });
           regulatingRingObject.rotateY(rotate);
+          // rotateAboutPoint(regulatingRingObject, three.Vector3(0, 0, 0),
+          //     three.Vector3(0, 1, 0), rotate, true);
         }
         if (intersects.first.object.id ==
             apertureRingObject.children.first.id) {
@@ -613,6 +726,9 @@ class _MyAppState extends State<WebGlLoaderObj> {
           //   fn2ButtonObject.translateZ(-0.05);
           // });
           apertureRingObject.rotateY(rotate);
+          // rotateAboutPoint(apertureRingObject, three.Vector3(0, 0, 0),
+          //     three.Vector3(0, 1, 0), rotate);
+          // apertureRingObject.rotateOnAxis(three.Vector3(0, 1, 1), 3.14);
         }
         if (intersected != null) {
           // materialEmmisivity(0);
